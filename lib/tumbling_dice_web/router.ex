@@ -1,0 +1,71 @@
+defmodule TumblingDiceWeb.Router do
+  use TumblingDiceWeb, :router
+
+  pipeline :browser do
+    plug :accepts, ["html"]
+    plug :fetch_session
+    plug :fetch_live_flash
+    plug :put_root_layout, {TumblingDiceWeb.LayoutView, :root}
+    plug :protect_from_forgery
+    plug :put_secure_browser_headers
+  end
+
+  pipeline :api do
+    plug :accepts, ["json"]
+  end
+
+  scope "/", TumblingDiceWeb do
+    pipe_through :browser
+
+    # DiceSet routes
+    live "/dice_sets", DiceSetLive.Index, :index
+    live "/dice_sets/new", DiceSetLive.Index, :new
+    live "/dice_sets/:id/edit", DiceSetLive.Index, :edit
+
+    live "/dice_sets/:id", DiceSetLive.Show, :show
+    live "/dice_sets/:id/show/edit", DiceSetLive.Show, :edit
+
+    # Color routes
+    live "/colors", ColorLive.Index, :index
+    live "/colors/new", ColorLive.Index, :new
+    live "/colors/:id/edit", ColorLive.Index, :edit
+
+    live "/colors/:id", ColorLive.Show, :show
+    live "/colors/:id/show/edit", ColorLive.Show, :edit
+    get "/", PageController, :index
+  end
+
+  # Other scopes may use custom stacks.
+  # scope "/api", TumblingDiceWeb do
+  #   pipe_through :api
+  # end
+
+  # Enables LiveDashboard only for development
+  #
+  # If you want to use the LiveDashboard in production, you should put
+  # it behind authentication and allow only admins to access it.
+  # If your application does not have an admins-only section yet,
+  # you can use Plug.BasicAuth to set up some basic authentication
+  # as long as you are also using SSL (which you should anyway).
+  if Mix.env() in [:dev, :test] do
+    import Phoenix.LiveDashboard.Router
+
+    scope "/" do
+      pipe_through :browser
+
+      live_dashboard "/dashboard", metrics: TumblingDiceWeb.Telemetry
+    end
+  end
+
+  # Enables the Swoosh mailbox preview in development.
+  #
+  # Note that preview only shows emails that were sent by the same
+  # node running the Phoenix server.
+  if Mix.env() == :dev do
+    scope "/dev" do
+      pipe_through :browser
+
+      forward "/mailbox", Plug.Swoosh.MailboxPreview
+    end
+  end
+end

@@ -1,0 +1,55 @@
+<h1>Listing Dice sets</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.dice_set_index_path(@socket, :index)}>
+    <.live_component
+      module={TumblingDiceWeb.DiceSetLive.FormComponent}
+      id={@dice_set.id || :new}
+      title={@page_title}
+      action={@live_action}
+      dice_set={@dice_set}
+      return_to={Routes.dice_set_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Description</th>
+      <th>Count</th>
+      <th>Set type</th>
+      <th>Size</th>
+      <th>Material</th>
+      <th>Theme</th>
+      <th>Brand</th>
+      <th>Effects</th>
+      <th>Image url</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="dice_sets">
+    <%= for dice_set <- @dice_sets do %>
+      <tr id={"dice_set-#{dice_set.id}"}>
+        <td><%= dice_set.description %></td>
+        <td><%= dice_set.count %></td>
+        <td><%= dice_set.set_type %></td>
+        <td><%= dice_set.size %></td>
+        <td><%= dice_set.material %></td>
+        <td><%= dice_set.theme %></td>
+        <td><%= dice_set.brand %></td>
+        <td><%= dice_set.effects %></td>
+        <td><%= dice_set.image_url %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.dice_set_show_path(@socket, :show, dice_set) %></span>
+          <span><%= live_patch "Edit", to: Routes.dice_set_index_path(@socket, :edit, dice_set) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: dice_set.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Dice set", to: Routes.dice_set_index_path(@socket, :new) %></span>

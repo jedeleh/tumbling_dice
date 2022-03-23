@@ -1,0 +1,66 @@
+<h1>Show Dice set</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.dice_set_show_path(@socket, :show, @dice_set)}>
+    <.live_component
+      module={TumblingDiceWeb.DiceSetLive.FormComponent}
+      id={@dice_set.id}
+      title={@page_title}
+      action={@live_action}
+      dice_set={@dice_set}
+      return_to={Routes.dice_set_show_path(@socket, :show, @dice_set)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Description:</strong>
+    <%= @dice_set.description %>
+  </li>
+
+  <li>
+    <strong>Count:</strong>
+    <%= @dice_set.count %>
+  </li>
+
+  <li>
+    <strong>Set type:</strong>
+    <%= @dice_set.set_type %>
+  </li>
+
+  <li>
+    <strong>Size:</strong>
+    <%= @dice_set.size %>
+  </li>
+
+  <li>
+    <strong>Material:</strong>
+    <%= @dice_set.material %>
+  </li>
+
+  <li>
+    <strong>Theme:</strong>
+    <%= @dice_set.theme %>
+  </li>
+
+  <li>
+    <strong>Brand:</strong>
+    <%= @dice_set.brand %>
+  </li>
+
+  <li>
+    <strong>Effects:</strong>
+    <%= @dice_set.effects %>
+  </li>
+
+  <li>
+    <strong>Image url:</strong>
+    <%= @dice_set.image_url %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.dice_set_show_path(@socket, :edit, @dice_set), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.dice_set_index_path(@socket, :index) %></span>
